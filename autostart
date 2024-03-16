@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#Wait for network and backgroup services to finish
+sleep 10
+
+# Define the path to the log file
+exec >> "/home/cpltv/.config/lxsession/LXDE-pi/kiosk.log" 2>&1
+
+#Set screen to never timeout
+xset -dpms
+
+# Update and upgrade the system to ensure chromium is up-to-date without manual updates
+sudo apt update
+sudo apt upgrade -y
+
+#Launching the LXDE session
+lxpanel --profile LXDE-pi
+pcmanfm --desktop --profile LXDE-pi
+point-rpi
+
+#Launching Chromium in incognito to avoid any popups, running in the background
+chromium-browser --start-fullscreen --start-maximized --noerrdialogs --disable-infobars --incognito https://display5.calgarylibrary.ca/ncl_library_tv_vertical/d5.php &
+#firefox
+
+#Hide the mouse from the screen
+unclutter -idle 1
+
+#Pull other script which will refresh the page every 100 seconds and restart the device every 24 hours
+/home/cpltv/.config/lxsession/LXDE-pi/pagerefresh.sh
